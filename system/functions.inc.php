@@ -655,14 +655,13 @@ function get_setting($varname = null, $permission_check = true)
  */
 function is_really_writable($file)
 {
-	// If we're on a Unix server with safe_mode off we call is_writable
-	if (DIRECTORY_SEPARATOR == '/' and @ini_get('safe_mode') == FALSE)
+	// safe_mode removed since PHP 5.4, always use is_writable on Unix
+	if (DIRECTORY_SEPARATOR == '/')
 	{
 		return is_writable($file);
 	}
 
-	// For windows servers and safe_mode "on" installations we'll actually
-	// write a file then read it.  Bah...
+	// For windows servers we'll actually write a file then read it.  Bah...
 	if (is_dir($file))
 	{
 		$file = rtrim($file, '/') . '/is_really_writable_' . md5(rand(1, 100));

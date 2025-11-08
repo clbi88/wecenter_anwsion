@@ -31,7 +31,8 @@ switch ($_POST['step'])
 	default :
 		$system_require = array();
 
-		if (version_compare(PHP_VERSION, ENVIRONMENT_PHP_VERSION, '>=') AND get_cfg_var('safe_mode') == false)
+		// safe_mode removed since PHP 5.4
+		if (version_compare(PHP_VERSION, ENVIRONMENT_PHP_VERSION, '>='))
 		{
 			$system_require['php'] = TRUE;
 		}
@@ -89,9 +90,10 @@ switch ($_POST['step'])
 			$system_require['ft_font'] = TRUE;
 		}
 
-		if (function_exists('mcrypt_module_open'))
+		// OpenSSL replaces deprecated Mcrypt (PHP 7.2+)
+		if (function_exists('openssl_encrypt') && function_exists('openssl_decrypt'))
 		{
-			$system_require['mcrypt'] = TRUE;
+			$system_require['openssl'] = TRUE;
 		}
 
 		if (function_exists('gzcompress'))

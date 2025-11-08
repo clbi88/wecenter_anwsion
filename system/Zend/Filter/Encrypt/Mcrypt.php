@@ -31,6 +31,10 @@
  * @package    Zend_Filter
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ *
+ * @deprecated This class uses the mcrypt extension which was deprecated in PHP 7.1
+ *             and removed in PHP 7.2. Use Zend_Filter_Encrypt_Openssl instead.
+ *             Note: This class will NOT work on PHP 7.2+ without the mcrypt pecl extension.
  */
 class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
 {
@@ -70,9 +74,21 @@ class Zend_Filter_Encrypt_Mcrypt implements Zend_Filter_Encrypt_Interface
      */
     public function __construct($options)
     {
+        // Warn about deprecated mcrypt extension
+        if (PHP_VERSION_ID >= 70100) {
+            trigger_error(
+                'Zend_Filter_Encrypt_Mcrypt uses the mcrypt extension which is deprecated in PHP 7.1+ and removed in PHP 7.2+. ' .
+                'Please use Zend_Filter_Encrypt_Openssl or core_crypt class instead.',
+                E_USER_DEPRECATED
+            );
+        }
+
         if (!extension_loaded('mcrypt')) {
             //require_once 'Zend/Filter/Exception.php';
-            throw new Zend_Filter_Exception('This filter needs the mcrypt extension');
+            throw new Zend_Filter_Exception(
+                'This filter needs the mcrypt extension. ' .
+                'Mcrypt was removed from PHP 7.2+. Please use OpenSSL-based encryption instead.'
+            );
         }
 
         if ($options instanceof Zend_Config) {

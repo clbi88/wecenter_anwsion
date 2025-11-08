@@ -1067,7 +1067,8 @@ class core_upload {
                 }
             }
 
-            if ( (bool) @ini_get('safe_mode') === FALSE && function_exists('shell_exec'))
+            // safe_mode removed since PHP 5.4
+            if (function_exists('shell_exec'))
             {
                 $mime = @shell_exec($cmd);
                 if (strlen($mime) > 0)

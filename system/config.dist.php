@@ -22,7 +22,10 @@ define('G_COOKIE_PREFIX','{G_COOKIE_PREFIX}');
 define('G_SECUKEY','{G_SECUKEY}');
 define('G_COOKIE_HASH_KEY', '{G_COOKIE_HASH_KEY}');
 
-define('G_INDEX_SCRIPT', '?/');
+// URL 访问模式: '?/' 或 'index.php/'
+// '?/' - Query String 模式: http://domain/?/admin/
+// 'index.php/' - PATHINFO 模式: http://domain/index.php/admin/
+define('G_INDEX_SCRIPT', 'index.php/');
 
 define('X_UA_COMPATIBLE', 'IE=edge,Chrome=1');
 

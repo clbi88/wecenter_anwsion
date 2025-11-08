@@ -189,27 +189,38 @@ class Text_Diff_Engine_native {
                     continue;
                 }
                 $matches = $ymatches[$line];
-                reset($matches);
-                while (list(, $y) = each($matches)) {
+                $matchesArray = array_values($matches);
+                $foundBreak = false;
+                $startIndex = 0;
+
+                // First loop: find break point
+                foreach ($matchesArray as $index => $y) {
                     if (empty($this->in_seq[$y])) {
                         $k = $this->_lcsPos($y);
                         assert($k > 0);
                         $ymids[$k] = $ymids[$k - 1];
+                        $startIndex = $index + 1;
+                        $foundBreak = true;
                         break;
                     }
                 }
-                while (list(, $y) = each($matches)) {
-                    if ($y > $this->seq[$k - 1]) {
-                        assert($y <= $this->seq[$k]);
-                        /* Optimization: this is a common case: next match is
-                         * just replacing previous match. */
-                        $this->in_seq[$this->seq[$k]] = false;
-                        $this->seq[$k] = $y;
-                        $this->in_seq[$y] = 1;
-                    } elseif (empty($this->in_seq[$y])) {
-                        $k = $this->_lcsPos($y);
-                        assert($k > 0);
-                        $ymids[$k] = $ymids[$k - 1];
+
+                // Second loop: continue from break point
+                if ($foundBreak) {
+                    for ($i = $startIndex; $i < count($matchesArray); $i++) {
+                        $y = $matchesArray[$i];
+                        if ($y > $this->seq[$k - 1]) {
+                            assert($y <= $this->seq[$k]);
+                            /* Optimization: this is a common case: next match is
+                             * just replacing previous match. */
+                            $this->in_seq[$this->seq[$k]] = false;
+                            $this->seq[$k] = $y;
+                            $this->in_seq[$y] = 1;
+                        } elseif (empty($this->in_seq[$y])) {
+                            $k = $this->_lcsPos($y);
+                            assert($k > 0);
+                            $ymids[$k] = $ymids[$k - 1];
+                        }
                     }
                 }
             }

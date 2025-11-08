@@ -72,24 +72,7 @@ if (file_exists(AWS_PATH . 'enterprise.php'))
 	require_once(AWS_PATH . 'enterprise.php');
 }
 
-if (function_exists('get_magic_quotes_gpc'))
-{
-	if (@get_magic_quotes_gpc()) // GPC 进行反向处理
-	{
-		if (! function_exists('stripslashes_gpc'))
-		{
-			function stripslashes_gpc(&$value)
-			{
-				$value = stripslashes($value);
-			}
-		}
-
-		array_walk_recursive($_GET, 'stripslashes_gpc');
-		array_walk_recursive($_POST, 'stripslashes_gpc');
-		array_walk_recursive($_COOKIE, 'stripslashes_gpc');
-		array_walk_recursive($_REQUEST, 'stripslashes_gpc');
-	}
-}
+// magic_quotes_gpc has been removed since PHP 5.4, no longer needed in PHP 7.4+
 
 require_once(ROOT_PATH . 'version.php');
 require_once(AWS_PATH . 'functions.inc.php');
@@ -99,24 +82,7 @@ array_walk_recursive($_POST, 'remove_invisible_characters');
 array_walk_recursive($_COOKIE, 'remove_invisible_characters');
 array_walk_recursive($_REQUEST, 'remove_invisible_characters');
 
-if (@ini_get('register_globals'))
-{
-	if ($_REQUEST)
-	{
-		foreach ($_REQUEST AS $name => $value)
-		{
-			unset($$name);
-		}
-	}
-
-	if ($_COOKIE)
-	{
-		foreach ($_COOKIE AS $name => $value)
-		{
-			unset($$name);
-		}
-	}
-}
+// register_globals has been removed since PHP 5.4, no longer needed in PHP 7.4+
 
 require_once(AWS_PATH . 'functions.app.php');
 

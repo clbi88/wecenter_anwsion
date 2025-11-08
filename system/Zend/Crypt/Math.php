@@ -83,23 +83,23 @@ class Zend_Crypt_Math extends Zend_Crypt_Math_BigInteger
                 return $bytes;
             }
         }
-        if (function_exists('mcrypt_create_iv')) {
-            $bytes = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-            if ($bytes !== false && strlen($bytes) === $length) {
-                return $bytes;
-            }
-        }
+        // mcrypt_create_iv removed (deprecated in PHP 7.1, removed in PHP 7.2)
+        // Using /dev/urandom as fallback
         if (file_exists('/dev/urandom') && is_readable('/dev/urandom')) {
             $frandom = fopen('/dev/urandom', 'r');
             if ($frandom !== false) {
-                return fread($frandom, $length);
+                $bytes = fread($frandom, $length);
+                fclose($frandom);
+                if (strlen($bytes) === $length) {
+                    return $bytes;
+                }
             }
         }
         if (true === $strong) {
             require_once 'Zend/Crypt/Exception.php';
             throw new Zend_Crypt_Exception(
                 'This PHP environment doesn\'t support secure random number generation. ' .
-                'Please consider installing the OpenSSL and/or Mcrypt extensions'
+                'Please install the OpenSSL extension'
             );
         }
         $rand = '';
