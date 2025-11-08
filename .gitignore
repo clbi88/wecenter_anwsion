@@ -10,3 +10,20 @@
 /uc_client/
 .tags
 .tags_sorted_by_file
+
+# Composer
+/vendor/
+composer.lock
+composer.phar
+
+# IDE
+/.idea/
+/.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+*.swp
+*.swo
+*~

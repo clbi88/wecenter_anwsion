@@ -91,6 +91,12 @@ if (file_exists(AWS_PATH . 'config.inc.php'))
 	require_once(AWS_PATH . 'config.inc.php');
 }
 
+// Load Composer autoload if available
+if (file_exists(ROOT_PATH . 'vendor/autoload.php'))
+{
+	require_once(ROOT_PATH . 'vendor/autoload.php');
+}
+
 load_class('core_autoload');
 
 date_default_timezone_set('Etc/GMT-8');

@@ -1,0 +1,59 @@
+{
+    "name": "wecenter/wecenter",
+    "description": "WeCenter - 社区问答系统",
+    "type": "project",
+    "keywords": ["wecenter", "question", "answer", "community", "forum"],
+    "homepage": "http://www.wecenter.com",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.4.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-gd": "*"
+    },
+    "require-dev": {},
+    "autoload": {
+        "classmap": [
+            "system/class/",
+            "system/core/",
+            "system/Services/",
+            "system/Zend/"
+        ],
+        "files": [
+            "system/functions.inc.php",
+            "system/functions.app.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php -r \"echo '\\n✓ WeCenter dependencies installed successfully!\\n';\""
+        ],
+        "post-update-cmd": [
+            "@php -r \"echo '\\n✓ WeCenter dependencies updated successfully!\\n';\""
+        ],
+        "test": [
+            "@php -r \"echo '\\n测试功能尚未配置\\n';\""
+        ],
+        "check-version": [
+            "@php -v"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "vendor-dir": "vendor",
+        "preferred-install": "dist",
+        "platform": {
+            "php": "7.4.0"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
