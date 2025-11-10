@@ -57,9 +57,14 @@ class draft_class extends AWS_MODEL
 	{
 		$draft = $this->fetch_row('draft', "item_id = " . intval($item_id) . " AND uid = " . intval($uid) . " AND `type` = '" . $this->quote($type) . "'");
 
+		// 修复反序列化漏洞 (2025-11-09)
 		if ($draft['data'])
 		{
-			$draft['data'] = unserialize($draft['data']);
+			// 原代码: $draft['data'] = unserialize($draft['data']);
+			$draft['data'] = safe_data_decode($draft['data'], array());
+			if ($draft['data'] === false) {
+				$draft['data'] = array();
+			}
 		}
 
 		return $draft;
@@ -105,9 +110,14 @@ class draft_class extends AWS_MODEL
 		{
 			foreach ($draft AS $key => $val)
 			{
+				// 修复反序列化漏洞 (2025-11-09)
 				if ($val['data'])
 				{
-					$draft[$key]['data'] = unserialize($val['data']);
+					// 原代码: $draft[$key]['data'] = unserialize($val['data']);
+					$draft[$key]['data'] = safe_data_decode($val['data'], array());
+					if ($draft[$key]['data'] === false) {
+						$draft[$key]['data'] = array();
+					}
 				}
 			}
 		}

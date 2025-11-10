@@ -115,9 +115,13 @@ class HTTP
 				$filename = $filename_conv;
 			}
 
-			$filename = preg_replace(
-				'~&#([0-9]+);~e',
-				"convert_int_to_utf8('\\1')",
+			// 修复严重漏洞: 移除preg_replace /e修饰符，使用安全的回调函数 (2025-11-09)
+			// 原代码: $filename = preg_replace('~&#([0-9]+);~e', "convert_int_to_utf8('\\1')", $filename);
+			$filename = preg_replace_callback(
+				'~&#([0-9]+);~',
+				function($matches) {
+					return convert_int_to_utf8($matches[1]);
+				},
 				$filename
 			);
 		}

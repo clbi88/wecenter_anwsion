@@ -291,7 +291,33 @@ function convert_encoding($string, $from_encoding = 'GBK', $target_encoding = 'U
  */
 function convert_encoding_array($data, $from_encoding = 'GBK', $target_encoding = 'UTF-8')
 {
-	return eval('return ' . convert_encoding(var_export($data, true) . ';', $from_encoding, $target_encoding));
+	// 修复严重漏洞: 移除eval()调用，使用安全的递归处理 (2025-11-09)
+	// 原代码: return eval('return ' . convert_encoding(var_export($data, true) . ';', $from_encoding, $target_encoding));
+
+	if (!is_array($data)) {
+		return convert_encoding($data, $from_encoding, $target_encoding);
+	}
+
+	$result = array();
+	foreach ($data as $key => $value) {
+		// 递归处理键名
+		if (is_string($key)) {
+			$new_key = convert_encoding($key, $from_encoding, $target_encoding);
+		} else {
+			$new_key = $key;
+		}
+
+		// 递归处理值
+		if (is_array($value)) {
+			$result[$new_key] = convert_encoding_array($value, $from_encoding, $target_encoding);
+		} elseif (is_string($value)) {
+			$result[$new_key] = convert_encoding($value, $from_encoding, $target_encoding);
+		} else {
+			$result[$new_key] = $value;
+		}
+	}
+
+	return $result;
 }
 
 /**

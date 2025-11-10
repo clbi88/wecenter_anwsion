@@ -699,7 +699,11 @@ class publish_class extends AWS_MODEL
 		{
 			foreach ($approval_list AS $key => $val)
 			{
-				$approval_list[$key]['data'] = unserialize($val['data']);
+				// 修复反序列化漏洞 (2025-11-09)
+			$approval_list[$key]['data'] = safe_data_decode($val['data'], array());
+			if ($approval_list[$key]['data'] === false) {
+				$approval_list[$key]['data'] = array();
+			}
 			}
 		}
 
@@ -710,7 +714,11 @@ class publish_class extends AWS_MODEL
 	{
 		if ($approval_item = $this->fetch_row('approval', 'id = ' . intval($id)))
 		{
-			$approval_item['data'] = unserialize($approval_item['data']);
+			// 修复反序列化漏洞 (2025-11-09)
+		$approval_item['data'] = safe_data_decode($approval_item['data'], array());
+		if ($approval_item['data'] === false) {
+			$approval_item['data'] = array();
+		}
 		}
 
 		return $approval_item;

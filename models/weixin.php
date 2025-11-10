@@ -136,7 +136,11 @@ class weixin_class extends AWS_MODEL
 
                     if ($account_info['weixin_mp_menu'])
                     {
-                        $accounts_info[$account_info['id']]['weixin_mp_menu'] = unserialize($account_info['weixin_mp_menu']);
+                        // 修复反序列化漏洞 (2025-11-09)
+                    $accounts_info[$account_info['id']]['weixin_mp_menu'] = safe_data_decode($account_info['weixin_mp_menu'], array());
+                    if ($accounts_info[$account_info['id']]['weixin_mp_menu'] === false) {
+                        $accounts_info[$account_info['id']]['weixin_mp_menu'] = array();
+                    }
                     }
                 }
             }
@@ -1584,7 +1588,11 @@ class weixin_class extends AWS_MODEL
             }
             else
             {
-                $msgs_details[$msg_id]['main_msg'] = unserialize($msgs_details[$msg_id]['main_msg']);
+                // 修复反序列化漏洞 (2025-11-09)
+            $msgs_details[$msg_id]['main_msg'] = safe_data_decode($msgs_details[$msg_id]['main_msg'], array());
+            if ($msgs_details[$msg_id]['main_msg'] === false) {
+                $msgs_details[$msg_id]['main_msg'] = array();
+            }
             }
 
             if (!$msgs_details[$msg_id]['articles_info'])
@@ -1593,7 +1601,11 @@ class weixin_class extends AWS_MODEL
             }
             else
             {
-                $msgs_details[$msg_id]['articles_info'] = unserialize($msgs_details[$msg_id]['articles_info']);
+                // 修复反序列化漏洞 (2025-11-09)
+            $msgs_details[$msg_id]['articles_info'] = safe_data_decode($msgs_details[$msg_id]['articles_info'], array());
+            if ($msgs_details[$msg_id]['articles_info'] === false) {
+                $msgs_details[$msg_id]['articles_info'] = array();
+            }
             }
 
             if (!$msgs_details[$msg_id]['questions_info'])
@@ -1602,7 +1614,11 @@ class weixin_class extends AWS_MODEL
             }
             else
             {
-                $msgs_details[$msg_id]['questions_info'] = unserialize($msgs_details[$msg_id]['questions_info']);
+                // 修复反序列化漏洞 (2025-11-09)
+            $msgs_details[$msg_id]['questions_info'] = safe_data_decode($msgs_details[$msg_id]['questions_info'], array());
+            if ($msgs_details[$msg_id]['questions_info'] === false) {
+                $msgs_details[$msg_id]['questions_info'] = array();
+            }
             }
         }
 

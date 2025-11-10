@@ -84,7 +84,11 @@ class verify_class extends AWS_MODEL
 	{
 		if ($verify_apply = $this->fetch_row('verify_apply', 'uid = ' . intval($uid)))
 		{
-			$verify_apply['data'] = unserialize($verify_apply['data']);
+			// 修复反序列化漏洞 (2025-11-09)
+		$verify_apply['data'] = safe_data_decode($verify_apply['data'], array());
+		if ($verify_apply['data'] === false) {
+			$verify_apply['data'] = array();
+		}
 		}
 
 		return $verify_apply;
@@ -109,7 +113,11 @@ class verify_class extends AWS_MODEL
 		{
 			foreach ($approval_list AS $key => $val)
 			{
-				$approval_list[$key]['data'] = unserialize($val['data']);
+				// 修复反序列化漏洞 (2025-11-09)
+			$approval_list[$key]['data'] = safe_data_decode($val['data'], array());
+			if ($approval_list[$key]['data'] === false) {
+				$approval_list[$key]['data'] = array();
+			}
 			}
 		}
 

@@ -223,7 +223,11 @@ class ACTION_LOG
 			{
 				if ($val['addon_data'])
 				{
-					$val['addon_data'] = unserialize($val['addon_data']);
+					// 修复反序列化漏洞 (2025-11-09)
+				$val['addon_data'] = safe_data_decode($val['addon_data'], array());
+				if ($val['addon_data'] === false) {
+					$val['addon_data'] = array();
+				}
 				}
 
 				$result[$val['history_id']] = $val;

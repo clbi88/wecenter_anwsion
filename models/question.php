@@ -50,7 +50,12 @@ class question_class extends AWS_MODEL
 
 		if ($questions[$question_id])
 		{
-			$questions[$question_id]['unverified_modify'] = @unserialize($questions[$question_id]['unverified_modify']);
+			// 修复反序列化漏洞 (2025-11-09)
+			// 原代码: $questions[$question_id]['unverified_modify'] = @unserialize($questions[$question_id]['unverified_modify']);
+			$questions[$question_id]['unverified_modify'] = safe_data_decode($questions[$question_id]['unverified_modify'], array());
+			if ($questions[$question_id]['unverified_modify'] === false) {
+				$questions[$question_id]['unverified_modify'] = array();
+			}
 
 			if (is_array($questions[$question_id]['unverified_modify']))
 			{
@@ -301,7 +306,10 @@ class question_class extends AWS_MODEL
 			return $question_info['unverified_modify'];
 		}
 
-		if ($question_info['unverified_modify'] = @unserialize($question_info['unverified_modify']))
+		// 修复反序列化漏洞 (2025-11-09)
+		// 原代码: if ($question_info['unverified_modify'] = @unserialize($question_info['unverified_modify']))
+		$question_info['unverified_modify'] = safe_data_decode($question_info['unverified_modify'], array());
+		if ($question_info['unverified_modify'] !== false && is_array($question_info['unverified_modify']))
 		{
 			return $question_info['unverified_modify'];
 		}

@@ -13,7 +13,7 @@
 */
 
 define('IN_ANWSION', TRUE);
-define('ENVIRONMENT_PHP_VERSION', '5.2.2');
+define('ENVIRONMENT_PHP_VERSION', '7.4.0');
 //define('SYSTEM_LANG', 'en_US');
 
 if (substr(PHP_VERSION, -4) == 'hhvm')
@@ -76,6 +76,12 @@ if (file_exists(AWS_PATH . 'enterprise.php'))
 
 require_once(ROOT_PATH . 'version.php');
 require_once(AWS_PATH . 'functions.inc.php');
+
+// 加载安全函数库 - 防止反序列化漏洞 (2025-11-09)
+if (file_exists(AWS_PATH . 'functions.security.php'))
+{
+	require_once(AWS_PATH . 'functions.security.php');
+}
 
 array_walk_recursive($_GET, 'remove_invisible_characters');
 array_walk_recursive($_POST, 'remove_invisible_characters');

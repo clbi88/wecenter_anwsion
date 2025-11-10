@@ -327,9 +327,14 @@ class account_class extends AWS_MODEL
             $user_info['url_token'] = urlencode($user_info['user_name']);
         }
 
+        // 修复反序列化漏洞: 使用安全的反序列化 (2025-11-09)
         if ($user_info['email_settings'])
         {
-            $user_info['email_settings'] = unserialize($user_info['email_settings']);
+            // 原代码: $user_info['email_settings'] = unserialize($user_info['email_settings']);
+            $user_info['email_settings'] = safe_data_decode($user_info['email_settings'], array());
+            if ($user_info['email_settings'] === false) {
+                $user_info['email_settings'] = array();
+            }
         }
         else
         {
@@ -338,7 +343,11 @@ class account_class extends AWS_MODEL
 
         if ($user_info['weixin_settings'])
         {
-            $user_info['weixin_settings'] = unserialize($user_info['weixin_settings']);
+            // 原代码: $user_info['weixin_settings'] = unserialize($user_info['weixin_settings']);
+            $user_info['weixin_settings'] = safe_data_decode($user_info['weixin_settings'], array());
+            if ($user_info['weixin_settings'] === false) {
+                $user_info['weixin_settings'] = array();
+            }
         }
         else
         {
@@ -406,9 +415,14 @@ class account_class extends AWS_MODEL
                     $val['url_token'] = urlencode($val['user_name']);
                 }
 
+                // 修复反序列化漏洞: 使用安全的反序列化 (2025-11-09)
                 if ($val['email_settings'])
                 {
-                    $val['email_settings'] = unserialize($val['email_settings']);
+                    // 原代码: $val['email_settings'] = unserialize($val['email_settings']);
+                    $val['email_settings'] = safe_data_decode($val['email_settings'], array());
+                    if ($val['email_settings'] === false) {
+                        $val['email_settings'] = array();
+                    }
                 }
                 else
                 {
@@ -417,7 +431,11 @@ class account_class extends AWS_MODEL
 
                 if ($val['weixin_settings'])
                 {
-                    $val['weixin_settings'] = unserialize($val['weixin_settings']);
+                    // 原代码: $val['weixin_settings'] = unserialize($val['weixin_settings']);
+                    $val['weixin_settings'] = safe_data_decode($val['weixin_settings'], array());
+                    if ($val['weixin_settings'] === false) {
+                        $val['weixin_settings'] = array();
+                    }
                 }
                 else
                 {
@@ -483,7 +501,12 @@ class account_class extends AWS_MODEL
             return array('data' => array());
         }
 
-        $setting['data'] = unserialize($setting['data']);
+        // 修复反序列化漏洞: 使用安全的反序列化 (2025-11-09)
+        // 原代码: $setting['data'] = unserialize($setting['data']);
+        $setting['data'] = safe_data_decode($setting['data'], array());
+        if ($setting['data'] === false) {
+            $setting['data'] = array();
+        }
 
         if (!$setting['data'])
         {
@@ -896,12 +919,20 @@ class account_class extends AWS_MODEL
 
                 if ($val['email_settings'])
                 {
-                    $data[$val['uid']]['email_settings'] = unserialize($val['email_settings']);
+                    // 修复反序列化漏洞 (2025-11-09)
+                    $data[$val['uid']]['email_settings'] = safe_data_decode($val['email_settings'], array());
+                    if ($data[$val['uid']]['email_settings'] === false) {
+                        $data[$val['uid']]['email_settings'] = array();
+                    }
                 }
 
                 if ($val['weixin_settings'])
                 {
-                    $data[$val['uid']]['weixin_settings'] = unserialize($val['weixin_settings']);
+                    // 修复反序列化漏洞 (2025-11-09)
+                    $data[$val['uid']]['weixin_settings'] = safe_data_decode($val['weixin_settings'], array());
+                    if ($data[$val['uid']]['weixin_settings'] === false) {
+                        $data[$val['uid']]['weixin_settings'] = array();
+                    }
                 }
 
                 $uids[] = $val['uid'];
@@ -1185,7 +1216,12 @@ class account_class extends AWS_MODEL
 
             if ($user_group['permission'])
             {
-                $user_group['permission'] = unserialize($user_group['permission']);
+                // 修复反序列化漏洞 (2025-11-09)
+                // 原代码: $user_group['permission'] = unserialize($user_group['permission']);
+                $user_group['permission'] = safe_data_decode($user_group['permission'], array());
+                if ($user_group['permission'] === false) {
+                    $user_group['permission'] = array();
+                }
             }
 
             AWS_APP::cache()->set('user_group_' . intval($group_id), $user_group, get_setting('cache_level_normal'), 'users_group');
@@ -1352,7 +1388,12 @@ class account_class extends AWS_MODEL
 
         if ($user_info['recent_topics'])
         {
-            $recent_topics = unserialize($user_info['recent_topics']);
+            // 修复反序列化漏洞 (2025-11-09)
+            // 原代码: $recent_topics = unserialize($user_info['recent_topics']);
+            $recent_topics = safe_data_decode($user_info['recent_topics'], array());
+            if ($recent_topics === false) {
+                $recent_topics = array();
+            }
         }
 
         $new_recent_topics[0] = $topic_title;

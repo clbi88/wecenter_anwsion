@@ -58,9 +58,19 @@ class core_plugins
 
 		if (file_exists($plugins_cache) AND file_exists($plugins_table_cache) AND file_exists($plugins_model_cache))
 		{
-			$this->plugins = unserialize(file_get_contents($plugins_cache));
-			$this->plugins_table = unserialize(file_get_contents($plugins_table_cache));
-			$this->plugins_model = unserialize(file_get_contents($plugins_model_cache));
+			// 修复反序列化漏洞 (2025-11-09)
+		$this->plugins = safe_data_decode(file_get_contents($plugins_cache), array());
+		if ($this->plugins === false) {
+			$this->plugins = array();
+		}
+			$this->plugins_table = safe_data_decode(file_get_contents($plugins_table_cache), array());
+		if ($this->plugins_table === false) {
+			$this->plugins_table = array();
+		}
+			$this->plugins_model = safe_data_decode(file_get_contents($plugins_model_cache), array());
+		if ($this->plugins_model === false) {
+			$this->plugins_model = array();
+		}
 
 			return false;
 		}

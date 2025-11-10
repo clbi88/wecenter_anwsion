@@ -773,9 +773,14 @@ class notify_class extends AWS_MODEL
 				}
 			}
 
+			// 修复反序列化漏洞 (2025-11-09)
 			foreach($notification as $key => $val)
 			{
-				$notification[$key]['data'] = unserialize($nt_data[$val['notification_id']]);
+				// 原代码: $notification[$key]['data'] = unserialize($nt_data[$val['notification_id']]);
+				$notification[$key]['data'] = safe_data_decode($nt_data[$val['notification_id']], array());
+				if ($notification[$key]['data'] === false) {
+					$notification[$key]['data'] = array();
+				}
 			}
 		}
 
@@ -822,7 +827,11 @@ class notify_class extends AWS_MODEL
 		{
 			foreach($extra_data as $key => $val)
 			{
-				$notification_data[$val['notification_id']]['data'] = unserialize($val['data']);
+				// 修复反序列化漏洞 (2025-11-09)
+			$notification_data[$val['notification_id']]['data'] = safe_data_decode($val['data'], array());
+			if ($notification_data[$val['notification_id']]['data'] === false) {
+				$notification_data[$val['notification_id']]['data'] = array();
+			}
 			}
 		}
 

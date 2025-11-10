@@ -28,7 +28,21 @@ class setting_class extends AWS_MODEL
 			{
 				if ($val['value'])
 				{
-					$val['value'] = unserialize($val['value']);
+					// 修复反序列化漏洞: 使用安全的反序列化，不允许对象 (2025-11-09)
+					// 原代码: $val['value'] = unserialize($val['value']);
+
+					// 优先尝试JSON解码（推荐格式）
+					$decoded = safe_json_decode($val['value']);
+					if ($decoded !== false) {
+						$val['value'] = $decoded;
+					} else {
+						// 向后兼容：使用安全的反序列化，不允许任何对象
+						$val['value'] = safe_unserialize($val['value'], array());
+						if ($val['value'] === false) {
+							// 如果解码失败，使用原值
+							$val['value'] = $system_setting[$key]['value'];
+						}
+					}
 				}
 
 				$settings[$val['varname']] = $val['value'];
