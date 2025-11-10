@@ -1,9 +1,9 @@
 {
-    "name": "wecenter/wecenter",
-    "description": "WeCenter - 社区问答系统",
+    "name": "anwsion",
+    "description": "anwsion - 社区问答系统",
     "type": "project",
-    "keywords": ["wecenter", "question", "answer", "community", "forum"],
-    "homepage": "http://www.wecenter.com",
+    "keywords": ["anwsion", "question", "answer", "community", "forum"],
+    "homepage": "http://www.anwsion.online",
     "license": "proprietary",
     "require": {
         "php": ">=7.4.0",
